@@ -8,7 +8,6 @@ app.use(express.static('public'));
 
 const router = require('./routes/routes.js');
 
-
 app.use('/', router);
 
 app.listen(port, () => {
