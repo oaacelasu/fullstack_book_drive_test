@@ -3,18 +3,147 @@
 <head>
     <%- include('partials/head'); %>
 </head>
-<body class="container">
+<body>
 
 <header>
     <%- include('partials/header'); %>
 </header>
 
-<main>
-    <div class="jumbotron">
-        <h1>G Test</h1>
-        <p>Book your G Diving test</p>
-    </div>
-</main>
+<div>
+    <main class="container">
+
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="images/logo.png" alt="" width="72" height="57">
+            <h2>G Test Info</h2>
+            <p class="lead">Input your licence number to automatically fill in your details.</p>
+        </div>
+        <div class="col-12">
+            <label for="license" class="form-label">License Number</label>
+            <input type="text" class="form-control" id="license" placeholder="0000-0000">
+            <div class="invalid-feedback">
+                Please enter a valid license number which must be 8 characters (alpha numeric)
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Search</button>
+        <hr class="my-4">
+
+        <div class="row g-5 my-div-disabled">
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Car details</span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <label for="make" class="form-label">Make</label>
+                            <input type="text" class="form-control" id="make" placeholder="Acura" required="">
+                            <div class="invalid-feedback">
+                                Please enter your car's make.
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <label for="model" class="form-label">Model</label>
+                            <input type="text" class="form-control" id="model" placeholder="Ranger" required="">
+                            <div class="invalid-feedback">
+                                Please enter a valid model.
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div class="col-md-4">
+                            <label for="year" class="form-label">Year</label>
+                            <select class="form-select" id="year" required="">
+                                <option value="">Choose...</option>
+                                <option>2022</option>
+                                <option>2021</option>
+                                <option>2020</option>
+                                <option>2019</option>
+                                <option>2018</option>
+                                <option>2017</option>
+                                <option>2016</option>
+                                <option>2015</option>
+                                <option>2014</option>
+                                <option>2013</option>
+                                <option>2012</option>
+                                <option>2011</option>
+                                <option>2010</option>
+                                <option>2009</option>
+                                <option>2008</option>
+                                <option>2007</option>
+                                <option>2006</option>
+                                <option>2005</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please provide a valid state.
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <label for="plat" class="form-label">Plat Number</label>
+                            <input type="text" class="form-control" id="plat" placeholder="2022" required="">
+                            <div class="invalid-feedback">
+                                Please enter your plat number.
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4 class="mb-3">Personal Information</h4>
+                <form class="needs-validation" novalidate="">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="firstName" class="form-label">First name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                            <div class="invalid-feedback">
+                                Valid first name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="lastName" class="form-label">Last name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+                            <div class="invalid-feedback">
+                                Valid last name is required.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="license" class="form-label">License Number</label>
+                            <input type="text" class="form-control" id="license" placeholder="0000-0000">
+                            <div class="invalid-feedback">
+                                Please enter a valid license number which must be 8 characters (alpha numeric)
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" placeholder="18" required="">
+                            <div class="invalid-feedback">
+                                Please enter your age.
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="dob" class="form-label">DOB</label>
+                            <input type="date" class="form-control" id="age" placeholder="yyyy-mm-dd" required="">
+                            <div class="invalid-feedback">
+                                Please enter your date of birth.
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
 
 <footer>
     <%- include('partials/footer'); %>

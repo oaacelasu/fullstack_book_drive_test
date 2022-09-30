@@ -1,9 +1,8 @@
-body {
-    background-color: bisque;
-    padding-top: 50px;
+.content-wrap {
+    display: flex;
+    justify-content: center;
 }
 
-h1 {
-    color: darkred;
-    background-color: midnightblue;
+.my-div-disabled {
+    pointer-events:none;
 }
