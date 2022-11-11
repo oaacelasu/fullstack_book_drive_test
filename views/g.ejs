@@ -5,25 +5,56 @@
     <main class="container">
 
         <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="images/logo.png" alt="" width="72" height="57">
+            <img class="d-block mx-auto mb-4" src="/images/logo.png" alt="" width="144">
             <h2>G Test Info</h2>
-            <p class="lead">Input your licence number to automatically fill in your details.</p>
+            <p class="lead">Input your license number to automatically fill in your details.</p>
+            <h1 style="color: red"><%= error ?? ""%></h1>
         </div>
-        <div class="col-12">
-            <label for="license" class="form-label">License Number</label>
-            <input type="text" class="form-control" id="license" placeholder="0000-0000">
-            <div class="invalid-feedback">
-                Please enter a valid license number which must be 8 characters (alpha numeric)
+        <form class="needs-validation <%= user !== null?"hidden":"visible"%>" id="myForm" name="myForm" action="/g/edit" method="get">
+            <div class="col-12">
+                <label for="license" class="form-label">License Number</label>
+                <input type="text" class="form-control" id="license" name="license" placeholder="0000-0000" value="" required="" value=<%= user?.license??"" %>>
+                <div class="invalid-feedback">
+                    Please enter a valid license number which must be 8 characters (alphanumeric)
+                </div>
+                <div>
+                    <hr class="my-4">
+                    <button class="w-100 btn btn-primary btn-lg " type="submit">Search</button>
+                </div>
             </div>
-        </div>
-
-        <hr class="my-4">
-
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Search</button>
-        <hr class="my-4">
-
-        <div class="row g-5 my-div-disabled">
-            <div class="col-md-5 col-lg-4 order-md-last">
+        </form>
+        <form class="needs-validation" id="myForm2" name="myForm2" action="/g/update/<%=user?.id%>" method="post">
+        <div class="g-update-form row g-5 <%= user!==null?"visible":"hidden"%>">
+            <div class="list-group w-auto col-md-6">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Personal Info</span>
+                </h4>
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <h5 class="mb-0 w-30">First Name: </h5>
+                        <small class="mb-0"><%= user?.firstName??"" %></small>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <h5 class="mb-0 w-30">Last name: </h5>
+                        <small class="mb-0"><%= user?.lastName??"" %></small>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <h5 class="mb-0 w-30">License No: </h5>
+                        <small class="mb-0"><%= user?.licenseNo??"" %></small>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <h5 class="mb-0 w-30">Age: </h5>
+                        <small class="mb-0"><%= user?.age??"" %></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-primary">Car details</span>
                 </h4>
@@ -31,7 +62,7 @@
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
                             <label for="make" class="form-label">Make</label>
-                            <input type="text" class="form-control" id="make" placeholder="Acura" required="">
+                            <input type="text" class="form-control" id="make" name="make" placeholder="" required="" value=<%= user?.carDetails.make??"" %>>
                             <div class="invalid-feedback">
                                 Please enter your car's make.
                             </div>
@@ -40,7 +71,7 @@
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
                             <label for="model" class="form-label">Model</label>
-                            <input type="text" class="form-control" id="model" placeholder="Ranger" required="">
+                            <input type="text" class="form-control" id="model" name="model" placeholder="" required="" value=<%= user?.carDetails.model??"" %>>
                             <div class="invalid-feedback">
                                 Please enter a valid model.
                             </div>
@@ -49,26 +80,21 @@
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div class="col-md-4">
                             <label for="year" class="form-label">Year</label>
-                            <select class="form-select" id="year" required="">
+                            <select class="form-select" id="year" name="year" required="">
                                 <option value="">Choose...</option>
-                                <option>2022</option>
-                                <option>2021</option>
-                                <option>2020</option>
-                                <option>2019</option>
-                                <option>2018</option>
-                                <option>2017</option>
-                                <option>2016</option>
-                                <option>2015</option>
-                                <option>2014</option>
-                                <option>2013</option>
-                                <option>2012</option>
-                                <option>2011</option>
-                                <option>2010</option>
-                                <option>2009</option>
-                                <option>2008</option>
-                                <option>2007</option>
-                                <option>2006</option>
-                                <option>2005</option>
+                                <option <% if(user?.carDetails.year === "2022"){%>selected<%} %>>2022</option>
+                                <option <% if(user?.carDetails.year === "2021"){%>selected<%} %>>2021</option>
+                                <option <% if(user?.carDetails.year === "2020"){%>selected<%} %>>2020</option>
+                                <option <% if(user?.carDetails.year === "2019"){%>selected<%} %>>2019</option>
+                                <option <% if(user?.carDetails.year === "2018"){%>selected<%} %>>2018</option>
+                                <option <% if(user?.carDetails.year === "2017"){%>selected<%} %>>2017</option>
+                                <option <% if(user?.carDetails.year === "2016"){%>selected<%} %>>2016</option>
+                                <option <% if(user?.carDetails.year === "2015"){%>selected<%} %>>2015</option>
+                                <option <% if(user?.carDetails.year === "2014"){%>selected<%} %>>2014</option>
+                                <option <% if(user?.carDetails.year === "2013"){%>selected<%} %>>2013</option>
+                                <option <% if(user?.carDetails.year === "2012"){%>selected<%} %>>2012</option>
+                                <option <% if(user?.carDetails.year === "2011"){%>selected<%} %>>2011</option>
+                                <option <% if(user?.carDetails.year === "2010"){%>selected<%} %>>2010</option>
                             </select>
                             <div class="invalid-feedback">
                                 Please provide a valid state.
@@ -77,8 +103,17 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
-                            <label for="plat" class="form-label">Plat Number</label>
-                            <input type="text" class="form-control" id="plat" placeholder="2022" required="">
+                            <label for="color" class="form-label">Color</label>
+                            <input type="text" class="form-control" id="color" name="color" placeholder="" required="" value=<%= user?.carDetails.color??"" %>>
+                            <div class="invalid-feedback">
+                                Please enter your Car's color.
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <label for="plateNo" class="form-label">Plat Number</label>
+                            <input type="text" class="form-control" id="plateNo" name="plateNo" placeholder="" required="" value=<%= user?.carDetails.plateNo??"" %>>
                             <div class="invalid-feedback">
                                 Please enter your plat number.
                             </div>
@@ -86,54 +121,11 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-7 col-lg-8">
-                <h4 class="mb-3">Personal Information</h4>
-                <form class="needs-validation" novalidate="">
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-                            <div class="invalid-feedback">
-                                Valid last name is required.
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <label for="license" class="form-label">License Number</label>
-                            <input type="text" class="form-control" id="license" placeholder="0000-0000">
-                            <div class="invalid-feedback">
-                                Please enter a valid license number which must be 8 characters (alpha numeric)
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="age" class="form-label">Age</label>
-                            <input type="number" class="form-control" id="age" placeholder="18" required="">
-                            <div class="invalid-feedback">
-                                Please enter your age.
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="dob" class="form-label">DOB</label>
-                            <input type="date" class="form-control" id="age" placeholder="yyyy-mm-dd" required="">
-                            <div class="invalid-feedback">
-                                Please enter your date of birth.
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
+            <hr class="my-4">
+            <button class="w-100 btn btn-primary btn-lg order-md-last" type="submit">Update</button>
         </div>
+        </form>
+
     </main>
 </div>
 <%- include('partials/footer'); %>

@@ -6,3 +6,11 @@
 .my-div-disabled {
     pointer-events:none;
 }
+
+.visible {
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
