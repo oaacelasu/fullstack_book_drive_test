@@ -12,7 +12,7 @@ const validateForm = () => {
     const model = $("#model").val();
     const year = $("#year").val();
     const color = $("#color").val();
-    const plateNo = $("#plate").val();
+    const plateNo = $("#plateNo").val();
 
 
     // validate the entries are not empty and display error message if they are
@@ -66,5 +66,5 @@ const validateForm = () => {
 }
 
 window.onload = () => {
-    $("#myForm").submit(validateForm);
+    $("#g2Form").submit(validateForm);
 }

@@ -1,28 +1,27 @@
 <%- include('partials/head'); %>
 <body>
-<%- include('partials/header'); %>
-<main class="w-50 m-auto">
-    <form>
-        <img class="mb-4" src="images/logo.png" alt="" width="144">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+<main class="w-75 m-auto">
+    <h2 class="text-lg text-info mt-3"><%= msg %></h2>
+    <img class="mb-4" src="images/logo.png" alt="" width="144">
 
-        <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
+    <form id="loginForm" class="border border-3 p-3" action="/" method="post">
+        <h1 class="h1 mb-3 fw-bold">Sign in</h1>
+
+        <div class="form-floating mb-3">
+            <label for="userName">User name</label>
+            <input type="text" class="form-control" id="userName" name="userName" placeholder="jhondoe">
         </div>
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
+        <div class="form-floating mb-3">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+
+        <button type="submit" class="w-100 btn btn-primary btn-lg mb-3  mt-5">Sign in</button>
+        <a href="/register" class="w-100 btn btn-lg btn-outline-secondary">Sign up</a>
     </form>
 </main>
 <%- include('partials/footer'); %>
+<script src="js/login.js"></script>
 </body>
 </html>

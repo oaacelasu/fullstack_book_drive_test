@@ -1,3 +1,4 @@
+const {mongo_string_connection, session_secret} = require('./config/default');
 // Express
 const express = require('express');
 const app = express();
@@ -7,26 +8,38 @@ const port = 5500;
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
+// Session
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session);
+const store = new MongoDBStore({
+    uri : mongo_string_connection,
+    collection : "sessions_data"
+})
+app.use(session({
+    secret : session_secret,
+    resave : false ,
+    saveUninitialized : false ,
+    store : store
+}))
+
 // Body Parser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
+// Bcrypt
+const bcrypt = require('bcryptjs');
+
 // File Upload
 const fileUpload = require('express-fileupload')
 app.use(fileUpload())
-
-// Middleware
-const {customMiddleWare, validateUser} = require("./middlewares/middlewares.js");
-app.use('/g2', customMiddleWare);
-app.use('/g2', validateUser);
 
 // Routes
 const router = require('./routes/routes.js');
 app.use('/', router);
 
 // Mongoose
-const dbManager = require('./controllers/db_manager.js');
-dbManager.init().then(r => {
+const init = require('./config/db_manager');
+init().then(r => {
         app.listen(port, () => {
             console.log(`Example app listening at http://localhost:${port}`)
         });

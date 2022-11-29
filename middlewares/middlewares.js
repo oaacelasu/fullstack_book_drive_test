@@ -1,12 +1,6 @@
-const customMiddleWare = (
-    req,res,next)=>{
-    console.log('Custom middle ware called')
-    next()
-}
-
-const validateUser = (
-    req,res,next)=>{
-    if(req.body.firstName === '' || req.body.lastName === '' || req.body.licenseNo === '' || req.body.age === '' || req.body.dob === '' || req.body.make === '' || req.body.model === '' || req.body.year === '' || req.body.color === '' || req.body.plateNo === ''){
+exports.validateUser = (
+    req, res, next) => {
+    if (req.body.firstName === '' || req.body.lastName === '' || req.body.licenseNo === '' || req.body.age === '' || req.body.make === '' || req.body.model === '' || req.body.year === '' || req.body.color === '' || req.body.plateNo === '') {
         console.log('Validation failed')
     } else {
         console.log('Validation success')
@@ -14,4 +8,20 @@ const validateUser = (
     }
 }
 
-module.exports = {customMiddleWare, validateUser}
+exports.isAuth = (req, res, next) => {
+    if (req.session.isAuth) {
+        next();
+    } else {
+        req.session.error = "You have to Login first";
+        res.redirect("/");
+    }
+};
+
+exports.isDriver = (req, res, next) => {
+    if (req.session.userType === 'driver') {
+        next();
+    } else {
+        req.session.error = "You don't have permission to access this page";
+        res.redirect("/dashboard");
+    }
+}

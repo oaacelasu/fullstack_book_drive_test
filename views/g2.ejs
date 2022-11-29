@@ -9,11 +9,13 @@
             <p class="lead">Below is a form to enter your G2 test information. Please fill out all fields.</p>
         </div>
 
-        <form class="needs-validation" novalidate="" id="myForm" name="myForm" action="/g2/add" method="post">
+        <form class="needs-validation" novalidate="" id="g2Form" name="g2Form" action="/g2/add" method="post">
 
         <div class="row g-5">
-            <div class="col-md-7 col-lg-8">
-                <h4 class="mb-3">Personal Information</h4>
+            <div class="list-group col-md-7 col-lg-8 mb-3">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Personal Information</span>
+                </h4>
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label for="firstName" class="form-label">First name</label>
@@ -47,15 +49,12 @@
                         </div>
                     </div>
                 </div>
-                <hr class="my-4">
-
-                <button class="w-100 btn btn-primary btn-lg" type="submit" id="submit">Submit</button>
             </div>
-            <div class="col-md-5 col-lg-4 order-md-last">
+            <div class="list-group col-md-5 col-lg-4">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-primary">Car details</span>
                 </h4>
-                <ul class="list-group mb-3">
+                <ul class="mb-3">
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
                             <label for="make" class="form-label">Make</label>
@@ -75,9 +74,9 @@
                         </div>
                     </li>
                     <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div class="col-md-4">
+                        <div>
                             <label for="year" class="form-label">Year</label>
-                            <select class="form-select" id="year" name="year" required="">
+                            <select class="custom-select" id="year" name="year" required="">
                                 <option value="">Choose...</option>
                                 <option>2022</option>
                                 <option>2021</option>
@@ -123,6 +122,8 @@
                     </li>
                 </ul>
             </div>
+            <button class="w-100 btn btn-primary btn-lg order-md-last" type="submit" id="submit">Submit</button>
+
         </div>
         </form>
     </main>
