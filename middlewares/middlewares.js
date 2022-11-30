@@ -25,3 +25,21 @@ exports.isDriver = (req, res, next) => {
         res.redirect("/dashboard");
     }
 }
+
+exports.isAdmin = (req, res, next) => {
+    if (req.session.userType === 'admin') {
+        next();
+    } else {
+        req.session.error = "You don't have permission to access this page";
+        res.redirect("/dashboard");
+    }
+}
+
+exports.iExaminer = (req, res, next) => {
+    if (req.session.userType === 'examiner') {
+        next();
+    } else {
+        req.session.error = "You don't have permission to access this page";
+        res.redirect("/dashboard");
+    }
+}

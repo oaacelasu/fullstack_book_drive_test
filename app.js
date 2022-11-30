@@ -12,14 +12,14 @@ app.use(express.static('public'));
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session);
 const store = new MongoDBStore({
-    uri : mongo_string_connection,
-    collection : "sessions_data"
+    uri: mongo_string_connection,
+    collection: "sessions_data"
 })
 app.use(session({
-    secret : session_secret,
-    resave : false ,
-    saveUninitialized : false ,
-    store : store
+    secret: session_secret,
+    resave: false,
+    saveUninitialized: false,
+    store: store
 }))
 
 // Body Parser

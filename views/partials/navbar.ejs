@@ -1,0 +1,29 @@
+<header>
+    <nav class="navbar navbar-light justify-content-between">
+        <a class="navbar-brand" href="/dashboard">Book DriveTest</a>
+        <ul class="nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" href="/dashboard">Home</a>
+            </li>
+
+            <% if(userType === 'driver') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/g">G Test</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/g2">G2 Test</a>
+                </li>
+            <% } %>
+
+            <% if(userType === 'admin') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/appointments">Appointments</a>
+                </li>
+            <% } %>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>

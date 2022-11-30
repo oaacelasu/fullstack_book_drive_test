@@ -1,130 +1,21 @@
 <%- include('partials/head'); %>
 <body>
-<%- include('partials/header'); %>
+<%- include('partials/navbar'); %>
 <div class="container">
     <main>
-        <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="images/logo.png" alt="" width="144">
-            <h2>G2 Test Info</h2>
-            <p class="lead">Below is a form to enter your G2 test information. Please fill out all fields.</p>
-        </div>
+        <%- include('partials/header', {title:'G2 Test Info', description:'Below is a form to enter your G2 test information. Please fill out all fields.'}); %>
 
-        <form class="needs-validation" novalidate="" id="g2Form" name="g2Form" action="/g2/add" method="post">
+        <form class="needs-validation" novalidate="" id="g2Form" name="g2Form" action="/g2" method="post">
 
-        <div class="row g-5">
-            <div class="list-group col-md-7 col-lg-8 mb-3">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-primary">Personal Information</span>
-                </h4>
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label for="firstName" class="form-label">First name</label>
-                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value="" required="">
-                        <div class="invalid-feedback">
-                            Valid first name is required.
-                        </div>
-                    </div>
+            <div class="row g-5">
 
-                    <div class="col-sm-6">
-                        <label for="lastName" class="form-label">Last name</label>
-                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="" value="" required="">
-                        <div class="invalid-feedback">
-                            Valid last name is required.
-                        </div>
-                    </div>
+                <%- include('partials/user_info_edit_test'); %>
 
-                    <div class="col-6">
-                        <label for="license" class="form-label">License Number</label>
-                        <input type="text" class="form-control" id="license" name="license" placeholder="0000-0000" value="" required="">
-                        <div class="invalid-feedback">
-                            Please enter a valid license number which must be 8 characters (alphanumeric)
-                        </div>
-                    </div>
+                <%- include('partials/car_info_edit_test', {user:null}); %>
 
-                    <div class="col-6">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control" id="age" name="age" placeholder="18" required="">
-                        <div class="invalid-feedback">
-                            Please enter your age.
-                        </div>
-                    </div>
-                </div>
+                <button class="w-100 btn btn-primary btn-lg order-md-last" type="submit" id="submit">Submit</button>
+
             </div>
-            <div class="list-group col-md-5 col-lg-4">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-primary">Car details</span>
-                </h4>
-                <ul class="mb-3">
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <label for="make" class="form-label">Make</label>
-                            <input type="text" class="form-control" id="make" name="make" placeholder="Acura" required="">
-                            <div class="invalid-feedback">
-                                Please enter your car's make.
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <label for="model" class="form-label">Model</label>
-                            <input type="text" class="form-control" id="model" name="model" placeholder="Ranger" required="">
-                            <div class="invalid-feedback">
-                                Please enter a valid model.
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <label for="year" class="form-label">Year</label>
-                            <select class="custom-select" id="year" name="year" required="">
-                                <option value="">Choose...</option>
-                                <option>2022</option>
-                                <option>2021</option>
-                                <option>2020</option>
-                                <option>2019</option>
-                                <option>2018</option>
-                                <option>2017</option>
-                                <option>2016</option>
-                                <option>2015</option>
-                                <option>2014</option>
-                                <option>2013</option>
-                                <option>2012</option>
-                                <option>2011</option>
-                                <option>2010</option>
-                                <option>2009</option>
-                                <option>2008</option>
-                                <option>2007</option>
-                                <option>2006</option>
-                                <option>2005</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Please provide a valid state.
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <label for="color" class="form-label">Color</label>
-                            <input type="text" class="form-control" id="color" name="color" placeholder="Black" required="">
-                            <div class="invalid-feedback">
-                                Please enter your car's color.
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <label for="plateNo" class="form-label">Plat Number</label>
-                            <input type="text" class="form-control" id="plateNo" name="plateNo" placeholder="2022" required="">
-                            <div class="invalid-feedback">
-                                Please enter your plat number.
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <button class="w-100 btn btn-primary btn-lg order-md-last" type="submit" id="submit">Submit</button>
-
-        </div>
         </form>
     </main>
 </div>
