@@ -1,0 +1,55 @@
+<%- include('partials/head'); %>
+<body>
+<%- include('partials/navbar'); %>
+<div>
+    <main class="container">
+        <%- include('partials/header', {title:'Examiner', description:'Drivers ready to take the test'}); %>
+
+
+        <div class="list-group">
+            <div class="row d-flex justify-content-between">
+                <h1>Users to examine</h1>
+                <div>
+                    <label for="testType">Test type:</label>
+                    <select name="testType" id="testType">
+                        <option value="">Filter...</option>
+                        <option <% if(testType === "G Test"){ %>selected
+                                <% } %>
+                        >G Test
+                        </option>
+                        <option <% if(testType === "G2 Test"){ %>selected
+                                <% } %>
+                        >G2 Test
+                        </option>
+                    </select>
+                </div>
+
+
+            </div>
+            <% for (let i = 0; i < users?.length ?? 0; i++) { %>
+                <a href="/examiner/user/<%= users[i]._id %>"
+                   class="list-group-item list-group-item-action d-flex mx-auto gap-3 py-3"
+                   aria-current="true">
+                    <img src="/images/logo.png" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <div class="mx-4">
+                            <h6 class="mb-0"><%= users[i].firstName + " " + users[i].lastName %></h6>
+                            <p class="mb-0 opacity-75"><%= users[i].testType %></p>
+                        </div>
+                        <small class="opacity-50 text-nowrap">now</small>
+                    </div>
+                </a>
+            <% } %>
+            <h2 class="text-lg text-info mt-3 <%= users.length !== 0 ? "hidden" : "visible" %>">There are no pending
+                tests</h2>
+
+        </div>
+
+
+    </main>
+</div>
+<%- include('partials/footer'); %>
+<script src="js/lib/utils_lib.js"></script>
+<script src="js/examiner.js"></script>
+</body>
+</html>

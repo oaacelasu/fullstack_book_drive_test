@@ -21,6 +21,12 @@
                 </li>
             <% } %>
 
+            <% if(userType === 'examiner') { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/examiner">Examiner</a>
+                </li>
+            <% } %>
+
             <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
             </li>

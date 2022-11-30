@@ -35,7 +35,7 @@ exports.isAdmin = (req, res, next) => {
     }
 }
 
-exports.iExaminer = (req, res, next) => {
+exports.isExaminer = (req, res, next) => {
     if (req.session.userType === 'examiner') {
         next();
     } else {

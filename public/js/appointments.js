@@ -31,11 +31,14 @@ window.onload = () => {
 
         if (date === '') {
             alert('❌ Please select a date');
+            return;
         }
 
         if (times.length === 0) {
             alert('❌ Please select at least one time slot');
+            return;
         }
+
 
         post('/appointments', {data: JSON.stringify(times.map(time => ({date, time})))});
     });

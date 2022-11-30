@@ -23,6 +23,12 @@
     <h4 class="d-flex justify-content-between align-items-center mb-3 mt-3 <%= user.appointment ? "visible" : "invisible" %>">
         <span class="text-primary">Appointment</span>
     </h4>
+    <div class="list-group-item list-group-item-action d-flex gap-3 py-3 bg-light <%= user.testType ? "visible" : "invisible" %>">
+        <div class="d-flex gap-2 w-100 justify-content-between">
+            <h5 class="mb-0 w-30">Test type: </h5>
+            <small class="mb-0"><%= user.testType ?? "" %></small>
+        </div>
+    </div>
     <div class="list-group-item list-group-item-action d-flex gap-3 py-3 bg-light <%= user.appointment ? "visible" : "invisible" %>">
         <div class="d-flex gap-2 w-100 justify-content-between">
             <h5 class="mb-0 w-30">Date: </h5>
@@ -36,5 +42,20 @@
         </div>
     </div>
 
+    <h4 class="d-flex justify-content-between align-items-center mb-3 mt-3 <%= user.testStatus !==  "" ? "visible" : "invisible" %>">
+        <span class="text-primary">Results</span>
+    </h4>
+    <div class="list-group-item list-group-item-action d-flex gap-3 py-3 bg-light <%= user.testStatus !==  "" ? "visible" : "invisible" %>">
+        <div class="d-flex gap-2 w-100 justify-content-between">
+            <h5 class="mb-0 w-30">Test status: </h5>
+            <small class="mb-0 <%= user.testStatus === "Pass" ? "text-success":"text-danger" %>"><%= user.testStatus ?? "" %></small>
+        </div>
+    </div>
+    <div class="list-group-item list-group-item-action d-flex gap-3 py-3 bg-light <%= user.comment !==  "" ? "visible" : "invisible" %>">
+        <div class="d-flex gap-2 w-100 justify-content-between">
+            <h5 class="mb-0 w-30">Comment: </h5>
+            <small class="mb-0"><%= user.comment ?? "" %></small>
+        </div>
+    </div>
 </div>
 

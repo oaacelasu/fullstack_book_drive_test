@@ -1,0 +1,8 @@
+        <div class="col-12 mx-auto <%= user.appointment ? "invisible" : "visible" %>">
+            <label for="date" class="form-label font-weight-bold display-5">Select a date to book appointment</label>
+            <input type="date" class="form-control form-control-lg" id="date" value="<%= date ?? "" %>"
+                   placeholder="yyyy-mm-dd">
+            <div class="invalid-feedback">
+                Please enter a date.
+            </div>
+        </div>

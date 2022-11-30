@@ -1,0 +1,24 @@
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <% if(userType === 'driver') { %>
+                <h2 class="fw-light"> G/G2 drive test from the Kiosk</h2>
+                <p class="lead text-muted">You can book G/G2 drive test from the Kiosk, Also the results will be posted
+                    on the user info section.</p>
+            <% } %>
+
+            <% if(userType === 'admin') { %>
+                <h2 class="fw-light">Admin time slot manager</h2>
+                <p class="lead text-muted">You can create new time slots for drivers to book their appointments</p>
+            <% } %>
+
+            <% if(userType === 'examiner') { %>
+                <h2 class="fw-light">Examiner dashboard</h2>
+                <p class="lead text-muted">You can make a list of available appointments, and screen users by posting a
+                    comment and determining whether or not they pass or fail</p>
+            <% } %>
+
+            <span class="text-sm-left font-italic">Posted by DriveTest Center</span>
+        </div>
+    </div>
+</section>

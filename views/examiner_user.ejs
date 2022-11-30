@@ -1,0 +1,38 @@
+<%- include('partials/head'); %>
+<body>
+<div>
+    <main class="container">
+        <%- include('partials/header', {title:'User test', description:'Please determine if the user has passed the exam and leave a comment'}); %>
+        <div class="row g-5">
+            <%- include('partials/user_info_read_test'); %>
+            <%- include('partials/car_info_read_test'); %>
+        </div>
+
+
+        <form id="examinerUserForm" class="border border-3 p-3" action="/examiner/user/<%= user._id %>" method="post">
+
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comments:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="Pass" name="testStatus" id="testStatusPass">
+                <label class="form-check-label" for="testStatusPass">
+                    Pass
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="Fail" name="testStatus" id="testStatusFail">
+                <label class="form-check-label" for="testStatusFail">
+                    Fail
+                </label>
+            </div>
+            <button class="w-100 btn btn-primary btn-lg order-md-last mt-3"
+                    type="submit">Submit
+            </button>
+        </form>
+    </main>
+</div>
+<%- include('partials/footer'); %>
+</body>
+</html>

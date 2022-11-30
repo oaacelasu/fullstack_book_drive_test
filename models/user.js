@@ -27,6 +27,18 @@ const UserSchema = new Schema({
         default: {}
     },
     appointment: { type: Schema.Types.ObjectId, ref: 'appointment'},
+    testType: {
+        type: String,
+        default: ''
+    },
+    comment: {
+        type: String,
+        default: ''
+    },
+    testStatus: {
+        type: String,
+        default: ''
+    }
 });
 
 const model = new mongoose.model('user', UserSchema);

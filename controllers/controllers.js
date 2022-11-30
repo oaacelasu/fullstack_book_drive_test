@@ -19,10 +19,25 @@ exports.g = async (req, res) => {
     if (user.licenseNo === "") {
         res.redirect('/g2')
     } else {
-        if(user.appointment) {
+
+        if (user.appointment) {
             user.appointment = await appointmentModel.findById(user.appointment)
+            res.render('g', {user: user, userType: req.session.userType, date: null, times: null})
+        } else {
+            let date = req.query.date
+
+            if (!date) {
+                res.render('g', {user: user, userType: req.session.userType, date: null, times: null})
+            } else {
+                let appointments = await appointmentModel.find({date, isTimeSlotAvailable: true})
+                res.render('g', {
+                    user: user,
+                    userType: req.session.userType,
+                    times: appointments.map(i => i.time),
+                    date: date
+                })
+            }
         }
-        res.render('g', {user: user, userType: req.session.userType})
     }
 };
 
@@ -50,6 +65,32 @@ exports.g_post = (req, res) => {
     );
 }
 
+exports.g_appointment_post = async (req, res) => {
+    let data = JSON.parse(req.body.data);
+
+    let appointment = await appointmentModel.findOne({
+        date: data.date,
+        time: data.time
+    })
+
+    userModel.findByIdAndUpdate(req.session.userId,
+        {
+            appointment: appointment._id,
+            testType: "G Test"
+        }
+        , async (error, userUpdated) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("User Updated Successfully as:" + userUpdated);
+                appointment.isTimeSlotAvailable = false
+                await appointment.save()
+                res.redirect("/g");
+            }
+        }
+    );
+}
+
 exports.g2 = async (req, res) => {
     let user = await userModel.findOne({_id: req.session.userId})
 
@@ -62,17 +103,22 @@ exports.g2 = async (req, res) => {
     if (user.licenseNo === "") {
         res.render('g2', {userType: req.session.userType})
     } else {
-        if(user.appointment) {
+        if (user.appointment) {
             user.appointment = await appointmentModel.findById(user.appointment)
-            res.render('g2_final.ejs', {user: user, userType: req.session.userType, date: null, times:null})
+            res.render('g2_final.ejs', {user: user, userType: req.session.userType, date: null, times: null})
         } else {
             let date = req.query.date
 
-            if(!date) {
-                res.render('g2_final.ejs', {user: user, userType: req.session.userType, times:null, date: null})
+            if (!date) {
+                res.render('g2_final.ejs', {user: user, userType: req.session.userType, times: null, date: null})
             } else {
                 let appointments = await appointmentModel.find({date, isTimeSlotAvailable: true})
-                res.render('g2_final.ejs', {user: user, userType: req.session.userType, times: appointments.map(i => i.time), date: date})
+                res.render('g2_final.ejs', {
+                    user: user,
+                    userType: req.session.userType,
+                    times: appointments.map(i => i.time),
+                    date: date
+                })
             }
         }
     }
@@ -119,7 +165,8 @@ exports.g2_appointment_post = async (req, res) => {
 
     userModel.findByIdAndUpdate(req.session.userId,
         {
-            appointment: appointment._id
+            appointment: appointment._id,
+            testType: "G2 Test"
         }
         , async (error, userUpdated) => {
             if (error) {
@@ -225,4 +272,55 @@ exports.appointments_post = async (req, res) => {
             }
         }
     );
+}
+
+exports.examiner = async (req, res) => {
+    let testType = req.query.type
+
+    let usersReady
+    if(testType) {
+        usersReady = await userModel.find({
+            testType,
+            appointment: { $ne: null },
+            testStatus:  ""
+        })
+    } else {
+        usersReady = await userModel.find({
+            appointment: { $ne: null },
+            testStatus:  ""
+        })
+    }
+    res.render('examiner', {userType: req.session.userType, users: usersReady, testType: testType})
+}
+
+
+exports.examiner_user = async (req, res) => {
+    let userId = req.params.id
+
+    let user = await userModel.findOne({_id: userId})
+
+    if (!user) {
+        return res.redirect('/examiner')
+    }
+
+    user.appointment = await appointmentModel.findById(user.appointment)
+    res.render('examiner_user.ejs', {user: user, userType: req.session.userType})
+}
+
+exports.examiner_user_post = async (req, res) => {
+    let userId = req.params.id
+    let comment = req.body.comment
+    let testStatus = req.body.testStatus
+
+    let user = await userModel.findOne({_id: userId})
+
+    if(comment){
+        user.comment = comment
+    }
+
+    if(testStatus) {
+        user.testStatus = testStatus
+    }
+    user.save()
+    res.redirect("/examiner")
 }

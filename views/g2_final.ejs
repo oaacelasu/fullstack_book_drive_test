@@ -10,14 +10,8 @@
             <%- include('partials/car_info_read_test'); %>
         </div>
 
-        <div class="col-12 mx-auto <%= user.appointment ? "invisible" : "visible" %>">
-            <label for="date" class="form-label font-weight-bold display-5">Select a date to book appointment</label>
-            <input type="date" class="form-control form-control-lg" id="date" value="<%= date ?? "" %>"
-                   placeholder="yyyy-mm-dd" required="">
-            <div class="invalid-feedback">
-                Please enter a date.
-            </div>
-        </div>
+        <%- include('partials/date_selector'); %>
+
 
         <form class="needs-validation <%= date ? "visible" : "invisible" %>" novalidate=""
               id="g2FinalForm" name="g2FinalForm"

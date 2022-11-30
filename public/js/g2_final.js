@@ -35,6 +35,7 @@ window.onload = () => {
 
         if (!time) {
             alert('❌ Please select the time slot');
+            return;
         }
 
         post('/g2/appointment', {data: JSON.stringify({date, time})});

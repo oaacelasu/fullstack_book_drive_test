@@ -3,11 +3,7 @@
 <%- include('partials/navbar'); %>
 <div>
     <main class="container">
-        <div class="py-5 text-center">
-            <img class="d-block mx-auto mb-4" src="/images/logo.png" alt="" width="144">
-            <h1>Appointments</h1>
-            <p class="lead">Time slots manager</p>
-        </div>
+        <%- include('partials/header', {title:'Appointments', description:'Time slots manager'}); %>
 
         <div class="col-12">
             <label for="date" class="form-label font-weight-bold display-5">Date</label>
