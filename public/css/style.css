@@ -72,10 +72,15 @@ body {
     pointer-events:none;
 }
 
-.visible {
-    display: flex;
-}
-
 .hidden {
     display: none;
+}
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn:active:focus {
+    outline: none;
+    box-shadow: none;
 }

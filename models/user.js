@@ -25,7 +25,8 @@ const UserSchema = new Schema({
     carDetails: {
         type: CarDetailsSchema,
         default: {}
-    }
+    },
+    appointment: { type: Schema.Types.ObjectId, ref: 'appointment'},
 });
 
 const model = new mongoose.model('user', UserSchema);

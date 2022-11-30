@@ -1,5 +1,5 @@
 const controller = require('../controllers/controllers');
-const {isAuth, isDriver, validateUser} = require('../middlewares/middlewares');
+const {isAuth, isDriver, validateUser, isAdmin} = require('../middlewares/middlewares');
 
 const express = require('express');
 
@@ -18,9 +18,14 @@ router.get('/g', isAuth, isDriver, controller.g);
 router.post('/g', isAuth, isDriver, validateUser, controller.g_post);
 router.get('/g2',isAuth, isDriver, controller.g2);
 
-router.post('/g2/add', isAuth, isDriver, validateUser, controller.g2Add);
+router.post('/g2', isAuth, isDriver, validateUser, controller.g2_post);
+router.post('/g2/appointment', isAuth, isDriver, validateUser, controller.g2_appointment_post);
+
 
 router.get('/dashboard', isAuth, controller.dashboard);
+
+router.get('/appointments', isAuth, isAdmin, controller.appointments);
+router.post('/appointments', isAuth, isAdmin, controller.appointments_post);
 
 module.exports = router;
 

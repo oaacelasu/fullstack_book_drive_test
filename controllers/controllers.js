@@ -1,5 +1,6 @@
 /** @member {Object} */
 const userModel = require('../models/user');
+const appointmentModel = require('../models/appointment');
 const bcrypt = require('bcryptjs');
 
 exports.dashboard = (req, res) => {
@@ -18,6 +19,9 @@ exports.g = async (req, res) => {
     if (user.licenseNo === "") {
         res.redirect('/g2')
     } else {
+        if(user.appointment) {
+            user.appointment = await appointmentModel.findById(user.appointment)
+        }
         res.render('g', {user: user, userType: req.session.userType})
     }
 };
@@ -58,11 +62,23 @@ exports.g2 = async (req, res) => {
     if (user.licenseNo === "") {
         res.render('g2', {userType: req.session.userType})
     } else {
-        res.render('g2_final.ejs', {user: user, userType: req.session.userType})
+        if(user.appointment) {
+            user.appointment = await appointmentModel.findById(user.appointment)
+            res.render('g2_final.ejs', {user: user, userType: req.session.userType, date: null, times:null})
+        } else {
+            let date = req.query.date
+
+            if(!date) {
+                res.render('g2_final.ejs', {user: user, userType: req.session.userType, times:null, date: null})
+            } else {
+                let appointments = await appointmentModel.find({date, isTimeSlotAvailable: true})
+                res.render('g2_final.ejs', {user: user, userType: req.session.userType, times: appointments.map(i => i.time), date: date})
+            }
+        }
     }
 };
 
-exports.g2Add = async (req, res) => {
+exports.g2_post = async (req, res) => {
 
     let e = req.body;
 
@@ -87,7 +103,32 @@ exports.g2Add = async (req, res) => {
                 console.log(error);
             } else {
                 console.log("User Updated Successfully as:" + userCreated);
-                res.redirect("/dashboard");
+                res.redirect("/g2");
+            }
+        }
+    );
+}
+
+exports.g2_appointment_post = async (req, res) => {
+    let data = JSON.parse(req.body.data);
+
+    let appointment = await appointmentModel.findOne({
+        date: data.date,
+        time: data.time
+    })
+
+    userModel.findByIdAndUpdate(req.session.userId,
+        {
+            appointment: appointment._id
+        }
+        , async (error, userUpdated) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("User Updated Successfully as:" + userUpdated);
+                appointment.isTimeSlotAvailable = false
+                await appointment.save()
+                res.redirect("/g2");
             }
         }
     );
@@ -159,4 +200,29 @@ exports.logout = (req, res) => {
         if (err) throw err;
         res.redirect('/')
     });
+}
+
+// Admin Routes
+exports.appointments = async (req, res) => {
+    let date = req.query.date
+    let appointments = await appointmentModel.find({date})
+    if (appointments.length === 0) {
+        res.render('appointments', {userType: req.session.userType, times: null, date: date})
+    } else {
+        res.render('appointments', {userType: req.session.userType, times: appointments.map(i => i.time), date: date})
+    }
+}
+
+exports.appointments_post = async (req, res) => {
+    let data = JSON.parse(req.body.data);
+    await appointmentModel.insertMany(data
+        , (error, appointmentCreated) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("Appointment Created Successfully as:" + appointmentCreated);
+                res.redirect(`/appointments?date=${data[0].date}`)
+            }
+        }
+    );
 }
