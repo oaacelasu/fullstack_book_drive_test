@@ -1,4 +1,0 @@
-{
-  "mongo_string_connection" : "mongodb+srv://oaacelasu:KIjl1t8mbGFJJrXc@cluster0.87gep3p.mongodb.net/fullstack_fp?retryWrites=true&w=majority",
-  "session_secret" : "secret1234"
-}

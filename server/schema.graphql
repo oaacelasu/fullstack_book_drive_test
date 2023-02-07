@@ -1,0 +1,52 @@
+scalar GraphQLDate
+
+enum EmployeeType {
+    FULL_TIME,
+    PART_TIME,
+    CONTRACT,
+    SEASONAL
+}
+
+enum Department {
+    IT,
+    HR,
+    Finance,
+    Sales,
+    Marketing
+}
+
+enum Title {
+    Employee,
+    Manager,
+    Director,
+    VP,
+}
+
+input EmployeeInputs {
+    firstName: String!
+    lastName: String!
+    age: Int!
+    dateOfJoining: GraphQLDate!,
+    title: Title!
+    department: Department!
+    employeeType: EmployeeType!
+}
+
+type Employee {
+    id: Int!
+    firstName: String!
+    lastName: String!
+    age: Int!
+    dateOfJoining: GraphQLDate!,
+    title: Title!
+    department: Department!
+    employeeType: EmployeeType!
+}
+
+type Query {
+    employeeList: [Employee!]!
+}
+
+type Mutation {
+    employeeAdd(employee: EmployeeInputs!): Employee!
+}
