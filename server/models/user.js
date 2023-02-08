@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const {CarDetailsSchema} = require('./car_detail');
 
 const UserSchema = new Schema({
-    userName: {type: String, required: true, unique: true},
-    password: {type: String, required: true, unique: true},
-    userType: {type: String, required: true},
     firstName: {
         type: String,
         default: ''
@@ -14,32 +10,26 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
-    licenseNo: {
-        type: String,
-        default: ''
-    },
     age: {
         type: Number,
         default: 0
     },
-    carDetails: {
-        type: CarDetailsSchema,
-        default: {}
+    dateOfJoining: {
+        type: Date,
     },
-    appointment: { type: Schema.Types.ObjectId, ref: 'appointment'},
-    testType: {
+    title: {
         type: String,
         default: ''
     },
-    comment: {
+    department: {
         type: String,
         default: ''
     },
-    testStatus: {
+    employeeType: {
         type: String,
         default: ''
-    }
+    },
 });
 
-const model = new mongoose.model('user', UserSchema);
+const model = new mongoose.model('employee', UserSchema);
 module.exports = model

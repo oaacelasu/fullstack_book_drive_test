@@ -39,6 +39,7 @@ class AppHeader extends React.Component {
         console.log(this.props.currentRoute);
         if (this.props.currentRoute === 'dashboard') {
             return <ul>
+                <li><a href={"#"} onClick={() => this.props.onActionClicked("search")} role={"button"}>Search</a></li>
                 <li><a href={"#"} onClick={() => this.props.onActionClicked("create")} role={"button"}>Create</a></li>
             </ul>
         } else {
@@ -81,8 +82,16 @@ class AppLoader extends React.Component {
         </div>;
     }
 }
-
 class EmployeeTable extends React.Component {
+    getPrettyDate(date) {
+        const d = new Date(date);
+        return d.toLocaleDateString();
+    }
+
+    getPrettyId(id) {
+        return id.substring(0, 8);
+    }
+
     render() {
         return <main className="container">
             <section className="row">
@@ -104,12 +113,12 @@ class EmployeeTable extends React.Component {
                         {
                             this.props.employees.map(employee =>
                                 <tr key={employee.id}>
-                                    <th scope="row">{employee.id}</th>
+                                    <th scope="row" data-tooltip={employee.id}>{this.getPrettyId(employee.id)}</th>
                                     <td>{employee.firstName}</td>
                                     <td>{employee.lastName}</td>
                                     <td>{employee.employeeType}</td>
                                     <td>{employee.department}</td>
-                                    <td>{employee.dateOfJoining}</td>
+                                    <td>{this.getPrettyDate(employee.dateOfJoining)}</td>
                                     <td>{employee.age}</td>
                                 </tr>
                             )
@@ -123,6 +132,48 @@ class EmployeeTable extends React.Component {
 }
 
 
+class EmployeeSearch extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            employeeTypeFilter: "",
+        }
+    }
+
+    handleChange = (event) => {
+        this.setState({employeeTypeFilter: event.target.value});
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.props.applySearch({
+            employeeType: this.state.employeeTypeFilter
+        });
+    }
+
+    render() {
+        return <div className="container">
+            <section className="row">
+                <div className="col-md-12">
+                    <h3>Search</h3>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="employeeType">Employee Type</label>
+                            <select id="employeeType" name="employeeType" className="form-control" value={this.state.employeeTypeFilter} onChange={this.handleChange}>
+                                <option value="">All</option>
+                                <option value="FULL_TIME">Full Time</option>
+                                <option value="PART_TIME">Part Time</option>
+                                <option value="CONTRACT">Contract</option>
+                            </select>
+                        </div>
+                        <button type="submit" className="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </section>
+        </div>;
+    }
+}
 
 class EmployeeForm extends React.Component {
 
@@ -288,13 +339,12 @@ class EmployeeDirectory extends React.Component {
         super(props);
         this.createEmployee = this.createEmployee.bind(this);
         this.handleNavClick = this.handleNavClick.bind(this);
-
-
         this.state = {
             employees: [],
             loading: true,
             error: null,
-            route: "dashboard"
+            route: "dashboard",
+            employeeTypeFilter: "",
         };
     }
 
@@ -330,8 +380,10 @@ class EmployeeDirectory extends React.Component {
     buildMain() {
         if (this.state.route === "dashboard") {
             return <EmployeeTable employees={this.state.employees}/>;
-        } else {
+        } else if(this.state.route === "create"){
             return <EmployeeForm onSubmit={this.createEmployee}/>;
+        } else if(this.state.route === "search"){
+            return <EmployeeSearch onSubmit={this.applySearch}/>;
         }
     }
 
@@ -342,7 +394,17 @@ class EmployeeDirectory extends React.Component {
         } else if (route === "dashboard") {
             this.setState({route: "dashboard"});
             this.componentDidMount();
+        } else if (route === "search") {
+            this.setState({route: "search"});
         }
+    }
+
+    applySearch(search) {
+        this.setState(
+            {
+                employeeTypeFilter: search.employeeType,
+                }
+        )
     }
 
     createEmployee(employee) {

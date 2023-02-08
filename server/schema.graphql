@@ -33,7 +33,7 @@ input EmployeeInputs {
 }
 
 type Employee {
-    id: Int!
+    id: String!
     firstName: String!
     lastName: String!
     age: Int!

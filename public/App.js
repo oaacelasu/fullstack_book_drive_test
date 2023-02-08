@@ -38,6 +38,10 @@ class AppHeader extends React.Component {
     if (this.props.currentRoute === 'dashboard') {
       return /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
         href: "#",
+        onClick: () => this.props.onActionClicked("search"),
+        role: "button"
+      }, "Search")), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+        href: "#",
         onClick: () => this.props.onActionClicked("create"),
         role: "button"
       }, "Create")));
@@ -80,6 +84,13 @@ class AppLoader extends React.Component {
   }
 }
 class EmployeeTable extends React.Component {
+  getPrettyDate(date) {
+    const d = new Date(date);
+    return d.toLocaleDateString();
+  }
+  getPrettyId(id) {
+    return id.substring(0, 8);
+  }
   render() {
     return /*#__PURE__*/React.createElement("main", {
       className: "container"
@@ -106,8 +117,61 @@ class EmployeeTable extends React.Component {
     }, "Age"))), /*#__PURE__*/React.createElement("tbody", null, this.props.employees.map(employee => /*#__PURE__*/React.createElement("tr", {
       key: employee.id
     }, /*#__PURE__*/React.createElement("th", {
-      scope: "row"
-    }, employee.id), /*#__PURE__*/React.createElement("td", null, employee.firstName), /*#__PURE__*/React.createElement("td", null, employee.lastName), /*#__PURE__*/React.createElement("td", null, employee.employeeType), /*#__PURE__*/React.createElement("td", null, employee.department), /*#__PURE__*/React.createElement("td", null, employee.dateOfJoining), /*#__PURE__*/React.createElement("td", null, employee.age))))))));
+      scope: "row",
+      "data-tooltip": employee.id
+    }, this.getPrettyId(employee.id)), /*#__PURE__*/React.createElement("td", null, employee.firstName), /*#__PURE__*/React.createElement("td", null, employee.lastName), /*#__PURE__*/React.createElement("td", null, employee.employeeType), /*#__PURE__*/React.createElement("td", null, employee.department), /*#__PURE__*/React.createElement("td", null, this.getPrettyDate(employee.dateOfJoining)), /*#__PURE__*/React.createElement("td", null, employee.age))))))));
+  }
+}
+class EmployeeSearch extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      employeeTypeFilter: ""
+    };
+  }
+  handleChange = event => {
+    this.setState({
+      employeeTypeFilter: event.target.value
+    });
+  };
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.applySearch({
+      employeeType: this.state.employeeTypeFilter
+    });
+  }
+  render() {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "container"
+    }, /*#__PURE__*/React.createElement("section", {
+      className: "row"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "col-md-12"
+    }, /*#__PURE__*/React.createElement("h3", null, "Search"), /*#__PURE__*/React.createElement("form", {
+      onSubmit: this.handleSubmit
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "employeeType"
+    }, "Employee Type"), /*#__PURE__*/React.createElement("select", {
+      id: "employeeType",
+      name: "employeeType",
+      className: "form-control",
+      value: this.state.employeeTypeFilter,
+      onChange: this.handleChange
+    }, /*#__PURE__*/React.createElement("option", {
+      value: ""
+    }, "All"), /*#__PURE__*/React.createElement("option", {
+      value: "FULL_TIME"
+    }, "Full Time"), /*#__PURE__*/React.createElement("option", {
+      value: "PART_TIME"
+    }, "Part Time"), /*#__PURE__*/React.createElement("option", {
+      value: "CONTRACT"
+    }, "Contract"))), /*#__PURE__*/React.createElement("button", {
+      type: "submit",
+      className: "btn btn-primary"
+    }, "Search")))));
   }
 }
 class EmployeeForm extends React.Component {
@@ -326,7 +390,8 @@ class EmployeeDirectory extends React.Component {
       employees: [],
       loading: true,
       error: null,
-      route: "dashboard"
+      route: "dashboard",
+      employeeTypeFilter: ""
     };
   }
   fetchEmployees() {
@@ -365,9 +430,13 @@ class EmployeeDirectory extends React.Component {
       return /*#__PURE__*/React.createElement(EmployeeTable, {
         employees: this.state.employees
       });
-    } else {
+    } else if (this.state.route === "create") {
       return /*#__PURE__*/React.createElement(EmployeeForm, {
         onSubmit: this.createEmployee
+      });
+    } else if (this.state.route === "search") {
+      return /*#__PURE__*/React.createElement(EmployeeSearch, {
+        onSubmit: this.applySearch
       });
     }
   }
@@ -382,7 +451,16 @@ class EmployeeDirectory extends React.Component {
         route: "dashboard"
       });
       this.componentDidMount();
+    } else if (route === "search") {
+      this.setState({
+        route: "search"
+      });
     }
+  }
+  applySearch(search) {
+    this.setState({
+      employeeTypeFilter: search.employeeType
+    });
   }
   createEmployee(employee) {
     console.log("createEmployee");
