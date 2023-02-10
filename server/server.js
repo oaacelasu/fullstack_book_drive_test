@@ -27,7 +27,12 @@ const init = require('./config/db_manager');
 
 const resolvers = {
     Query: {
-        employeeList: employeesList,
+        employeeList(parent, args, contextValue, info) {
+            console.log("hola");
+            console.log(args);
+
+            return employeeList(args);
+        },
     },
     Mutation: {
         employeeAdd,
@@ -83,9 +88,48 @@ server.start().then(() => {
     app.listen({port: graphQlPort}, () =>
         console.log(`🚀 Server ready at http://localhost:${graphQlPort}${server.graphqlPath}`));
 });
-async function employeesList() {
-    const employees = await userModel.find({});
-    return employees;
+async function employeeList(args){
+    const {
+        firstName,
+        lastName,
+        age,
+        dateOfJoining,
+        title,
+        department,
+        employeeType
+
+    } = args;
+
+    var query = {};
+    if (firstName) {
+        query.firstName = firstName;
+    }
+
+    if (lastName) {
+        query.lastName = lastName;
+    }
+
+    if (age) {
+        query.age = age;
+    }
+
+    if (dateOfJoining) {
+        query.dateOfJoining = dateOfJoining;
+    }
+
+    if (title) {
+        query.title = title;
+    }
+
+    if (department) {
+        query.department = department;
+    }
+
+    if (employeeType) {
+        query.employeeType = employeeType;
+    }
+
+    return await userModel.find(query);
 }
 
 async function employeeAdd(_, {employee}) {

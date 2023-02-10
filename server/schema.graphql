@@ -44,7 +44,15 @@ type Employee {
 }
 
 type Query {
-    employeeList: [Employee!]!
+    employeeList(
+        firstName: String,
+        lastName: String,
+        age: Int,
+        dateOfJoining: GraphQLDate,
+        title: Title,
+        department: Department,
+        employeeType: EmployeeType
+    ): [Employee!]!
 }
 
 type Mutation {

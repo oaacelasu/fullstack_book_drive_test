@@ -8,8 +8,8 @@
     Description: This is the main entry point for the application - EMS (Employee Management System) - Assignment 1
  */
 }
-const GET_EMPLOYEES = `query {
-                          employeeList {
+const GET_EMPLOYEES = data => `query {
+                          employeeList(employeeType: ${data.employeeType}, department: ${data.department}, title: ${data.title}) {
                             title
                             lastName
                             firstName
@@ -112,6 +112,8 @@ class EmployeeTable extends React.Component {
       scope: "col"
     }, "Department"), /*#__PURE__*/React.createElement("th", {
       scope: "col"
+    }, "Title"), /*#__PURE__*/React.createElement("th", {
+      scope: "col"
     }, "Date of Joining"), /*#__PURE__*/React.createElement("th", {
       scope: "col"
     }, "Age"))), /*#__PURE__*/React.createElement("tbody", null, this.props.employees.map(employee => /*#__PURE__*/React.createElement("tr", {
@@ -119,26 +121,62 @@ class EmployeeTable extends React.Component {
     }, /*#__PURE__*/React.createElement("th", {
       scope: "row",
       "data-tooltip": employee.id
-    }, this.getPrettyId(employee.id)), /*#__PURE__*/React.createElement("td", null, employee.firstName), /*#__PURE__*/React.createElement("td", null, employee.lastName), /*#__PURE__*/React.createElement("td", null, employee.employeeType), /*#__PURE__*/React.createElement("td", null, employee.department), /*#__PURE__*/React.createElement("td", null, this.getPrettyDate(employee.dateOfJoining)), /*#__PURE__*/React.createElement("td", null, employee.age))))))));
+    }, this.getPrettyId(employee.id)), /*#__PURE__*/React.createElement("td", null, employee.firstName), /*#__PURE__*/React.createElement("td", null, employee.lastName), /*#__PURE__*/React.createElement("td", null, employee.employeeType), /*#__PURE__*/React.createElement("td", null, employee.department), /*#__PURE__*/React.createElement("td", null, employee.title), /*#__PURE__*/React.createElement("td", null, this.getPrettyDate(employee.dateOfJoining)), /*#__PURE__*/React.createElement("td", null, employee.age))))))));
   }
 }
 class EmployeeSearch extends React.Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeEmployeeType = this.handleChangeEmployeeType.bind(this);
+    this.handleChangeDepartment = this.handleChangeDepartment.bind(this);
+    this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.state = {
-      employeeTypeFilter: ""
+      filters: this.props.filters
     };
   }
-  handleChange = event => {
-    this.setState({
-      employeeTypeFilter: event.target.value
-    });
-  };
   handleSubmit(event) {
     event.preventDefault();
-    this.props.applySearch({
-      employeeType: this.state.employeeTypeFilter
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+    let filters = {
+      department: null,
+      title: null,
+      employeeType: null
+    };
+    if (data.employeeType !== "") {
+      filters.employeeType = data.employeeType;
+    }
+    if (data.department !== "") {
+      filters.department = data.department;
+    }
+    if (data.title !== "") {
+      filters.title = data.title;
+    }
+    this.props.onSubmit(filters);
+  }
+  handleChangeEmployeeType(event) {
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        employeeType: event.target.value
+      }
+    });
+  }
+  handleChangeDepartment(event) {
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        department: event.target.value
+      }
+    });
+  }
+  handleChangeTitle(event) {
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        title: event.target.value
+      }
     });
   }
   render() {
@@ -158,8 +196,8 @@ class EmployeeSearch extends React.Component {
       id: "employeeType",
       name: "employeeType",
       className: "form-control",
-      value: this.state.employeeTypeFilter,
-      onChange: this.handleChange
+      value: this.state.filters.employeeType ?? "",
+      onChange: this.handleChangeEmployeeType
     }, /*#__PURE__*/React.createElement("option", {
       value: ""
     }, "All"), /*#__PURE__*/React.createElement("option", {
@@ -168,7 +206,51 @@ class EmployeeSearch extends React.Component {
       value: "PART_TIME"
     }, "Part Time"), /*#__PURE__*/React.createElement("option", {
       value: "CONTRACT"
-    }, "Contract"))), /*#__PURE__*/React.createElement("button", {
+    }, "Contract"), /*#__PURE__*/React.createElement("option", {
+      value: "SEASONAL"
+    }, "Seasonal"))), /*#__PURE__*/React.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "department"
+    }, "Department"), /*#__PURE__*/React.createElement("select", {
+      id: "department",
+      name: "department",
+      className: "form-control",
+      value: this.state.filters.department ?? "",
+      onChange: this.handleChangeDepartment
+    }, /*#__PURE__*/React.createElement("option", {
+      value: ""
+    }, "All"), /*#__PURE__*/React.createElement("option", {
+      value: "IT"
+    }, "IT"), /*#__PURE__*/React.createElement("option", {
+      value: "HR"
+    }, "HR"), /*#__PURE__*/React.createElement("option", {
+      value: "Finance"
+    }, "Finance"), /*#__PURE__*/React.createElement("option", {
+      value: "Sales"
+    }, "Sales"), /*#__PURE__*/React.createElement("option", {
+      value: "Marketing"
+    }, "Marketing"))), /*#__PURE__*/React.createElement("div", {
+      className: "form-group"
+    }, /*#__PURE__*/React.createElement("label", {
+      htmlFor: "title"
+    }, "Title"), /*#__PURE__*/React.createElement("select", {
+      id: "title",
+      name: "title",
+      className: "form-control",
+      value: this.state.filters.title ?? "",
+      onChange: this.handleChangeTitle
+    }, /*#__PURE__*/React.createElement("option", {
+      value: ""
+    }, "All"), /*#__PURE__*/React.createElement("option", {
+      value: "Employee"
+    }, "Employee"), /*#__PURE__*/React.createElement("option", {
+      value: "Manager"
+    }, "Manager"), /*#__PURE__*/React.createElement("option", {
+      value: "Director"
+    }, "Director"), /*#__PURE__*/React.createElement("option", {
+      value: "VP"
+    }, "VP"))), /*#__PURE__*/React.createElement("button", {
       type: "submit",
       className: "btn btn-primary"
     }, "Search")))));
@@ -330,8 +412,8 @@ class EmployeeForm extends React.Component {
     }, "Part Time"), /*#__PURE__*/React.createElement("option", {
       value: "CONTRACT"
     }, "Contract"), /*#__PURE__*/React.createElement("option", {
-      value: "INTERN"
-    }, "Intern")))), /*#__PURE__*/React.createElement("div", {
+      value: "SEASONAL"
+    }, "Seasonal")))), /*#__PURE__*/React.createElement("div", {
       className: "grid"
     }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
       htmlFor: "department",
@@ -386,12 +468,17 @@ class EmployeeDirectory extends React.Component {
     super(props);
     this.createEmployee = this.createEmployee.bind(this);
     this.handleNavClick = this.handleNavClick.bind(this);
+    this.applySearch = this.applySearch.bind(this);
     this.state = {
       employees: [],
       loading: true,
       error: null,
       route: "dashboard",
-      employeeTypeFilter: ""
+      filters: {
+        department: null,
+        title: null,
+        employeeType: null
+      }
     };
   }
   fetchEmployees() {
@@ -401,13 +488,15 @@ class EmployeeDirectory extends React.Component {
       error: null,
       route: "dashboard"
     });
+    let query = GET_EMPLOYEES(this.state.filters);
+    console.log("EmployeeDirectory fetchEmployees query: " + query);
     return fetch('/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        query: GET_EMPLOYEES
+        query: query
       })
     }).then(response => response.json()).then(result => {
       this.setState({
@@ -427,16 +516,17 @@ class EmployeeDirectory extends React.Component {
   }
   buildMain() {
     if (this.state.route === "dashboard") {
-      return /*#__PURE__*/React.createElement(EmployeeTable, {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("ul", null, this.state.filters.department && /*#__PURE__*/React.createElement("li", null, "Department: ", this.state.filters.department), this.state.filters.title && /*#__PURE__*/React.createElement("li", null, "Title: ", this.state.filters.title), this.state.filters.employeeType && /*#__PURE__*/React.createElement("li", null, "Employee Type: ", this.state.filters.employeeType)), /*#__PURE__*/React.createElement(EmployeeTable, {
         employees: this.state.employees
-      });
+      }));
     } else if (this.state.route === "create") {
       return /*#__PURE__*/React.createElement(EmployeeForm, {
         onSubmit: this.createEmployee
       });
     } else if (this.state.route === "search") {
       return /*#__PURE__*/React.createElement(EmployeeSearch, {
-        onSubmit: this.applySearch
+        onSubmit: this.applySearch,
+        filters: this.state.filters
       });
     }
   }
@@ -459,8 +549,12 @@ class EmployeeDirectory extends React.Component {
   }
   applySearch(search) {
     this.setState({
-      employeeTypeFilter: search.employeeType
+      loading: true,
+      filters: search
     });
+    setTimeout(() => {
+      this.componentDidMount();
+    }, 1000);
   }
   createEmployee(employee) {
     console.log("createEmployee");

@@ -8,8 +8,8 @@
     Description: This is the main entry point for the application - EMS (Employee Management System) - Assignment 1
 */
 }
-const GET_EMPLOYEES = `query {
-                          employeeList {
+const GET_EMPLOYEES = (data) => `query {
+                          employeeList(employeeType: ${data.employeeType}, department: ${data.department}, title: ${data.title}) {
                             title
                             lastName
                             firstName
@@ -59,6 +59,7 @@ class AppHeader extends React.Component {
         </header>;
     }
 }
+
 class AppError extends React.Component {
     render() {
         return <div className={"container"}>
@@ -70,6 +71,7 @@ class AppError extends React.Component {
         </div>;
     }
 }
+
 class AppLoader extends React.Component {
     render() {
         if (!this.props.isLoading) {
@@ -82,6 +84,7 @@ class AppLoader extends React.Component {
         </div>;
     }
 }
+
 class EmployeeTable extends React.Component {
     getPrettyDate(date) {
         const d = new Date(date);
@@ -105,8 +108,10 @@ class EmployeeTable extends React.Component {
                             <th scope="col">Last Name</th>
                             <th scope="col">Employee Type</th>
                             <th scope="col">Department</th>
+                            <th scope="col">Title</th>
                             <th scope="col">Date of Joining</th>
                             <th scope="col">Age</th>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -118,6 +123,7 @@ class EmployeeTable extends React.Component {
                                     <td>{employee.lastName}</td>
                                     <td>{employee.employeeType}</td>
                                     <td>{employee.department}</td>
+                                    <td>{employee.title}</td>
                                     <td>{this.getPrettyDate(employee.dateOfJoining)}</td>
                                     <td>{employee.age}</td>
                                 </tr>
@@ -136,19 +142,63 @@ class EmployeeSearch extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeEmployeeType = this.handleChangeEmployeeType.bind(this);
+        this.handleChangeDepartment = this.handleChangeDepartment.bind(this);
+        this.handleChangeTitle = this.handleChangeTitle.bind(this);
         this.state = {
-            employeeTypeFilter: "",
+            filters: this.props.filters
         }
-    }
-
-    handleChange = (event) => {
-        this.setState({employeeTypeFilter: event.target.value});
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        this.props.applySearch({
-            employeeType: this.state.employeeTypeFilter
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+        let filters = {
+            department: null,
+            title: null,
+            employeeType: null
+        };
+
+        if (data.employeeType !== "") {
+            filters.employeeType = data.employeeType;
+        }
+
+        if (data.department !== "") {
+            filters.department = data.department;
+        }
+
+        if (data.title !== "") {
+            filters.title = data.title;
+        }
+
+        this.props.onSubmit(filters);
+    }
+
+    handleChangeEmployeeType(event) {
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                employeeType: event.target.value
+            }
+        });
+    }
+
+    handleChangeDepartment(event) {
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                department: event.target.value
+            }
+        });
+    }
+
+    handleChangeTitle(event) {
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                title: event.target.value
+            }
         });
     }
 
@@ -160,11 +210,37 @@ class EmployeeSearch extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="employeeType">Employee Type</label>
-                            <select id="employeeType" name="employeeType" className="form-control" value={this.state.employeeTypeFilter} onChange={this.handleChange}>
+                            <select id="employeeType" name="employeeType" className="form-control"
+                                    value={this.state.filters.employeeType ?? ""}
+                                    onChange={this.handleChangeEmployeeType}>
                                 <option value="">All</option>
                                 <option value="FULL_TIME">Full Time</option>
                                 <option value="PART_TIME">Part Time</option>
                                 <option value="CONTRACT">Contract</option>
+                                <option value="SEASONAL">Seasonal</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="department">Department</label>
+                            <select id="department" name="department" className="form-control"
+                                    value={this.state.filters.department ?? ""} onChange={this.handleChangeDepartment}>
+                                <option value="">All</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Marketing">Marketing</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="title">Title</label>
+                            <select id="title" name="title" className="form-control"
+                                    value={this.state.filters.title ?? ""} onChange={this.handleChangeTitle}>
+                                <option value="">All</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Director">Director</option>
+                                <option value="VP">VP</option>
                             </select>
                         </div>
                         <button type="submit" className="btn btn-primary">Search</button>
@@ -296,7 +372,7 @@ class EmployeeForm extends React.Component {
                                     <option value="FULL_TIME">Full Time</option>
                                     <option value="PART_TIME">Part Time</option>
                                     <option value="CONTRACT">Contract</option>
-                                    <option value="INTERN">Intern</option>
+                                    <option value="SEASONAL">Seasonal</option>
                                 </select>
                             </div>
 
@@ -339,12 +415,17 @@ class EmployeeDirectory extends React.Component {
         super(props);
         this.createEmployee = this.createEmployee.bind(this);
         this.handleNavClick = this.handleNavClick.bind(this);
+        this.applySearch = this.applySearch.bind(this);
         this.state = {
             employees: [],
             loading: true,
             error: null,
             route: "dashboard",
-            employeeTypeFilter: "",
+            filters: {
+                department: null,
+                title: null,
+                employeeType: null
+            },
         };
     }
 
@@ -355,10 +436,15 @@ class EmployeeDirectory extends React.Component {
             error: null,
             route: "dashboard"
         })
+
+        let query = GET_EMPLOYEES(this.state.filters);
+
+        console.log("EmployeeDirectory fetchEmployees query: " + query);
+
         return fetch('/graphql', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: GET_EMPLOYEES})
+            body: JSON.stringify({query: query}),
         }).then(response => response.json()).then(result => {
             this.setState({
                 employees: result.data.employeeList,
@@ -379,11 +465,18 @@ class EmployeeDirectory extends React.Component {
 
     buildMain() {
         if (this.state.route === "dashboard") {
-            return <EmployeeTable employees={this.state.employees}/>;
-        } else if(this.state.route === "create"){
+            return <div>
+                <ul>
+                    {this.state.filters.department && <li>Department: {this.state.filters.department}</li>}
+                    {this.state.filters.title && <li>Title: {this.state.filters.title}</li>}
+                    {this.state.filters.employeeType && <li>Employee Type: {this.state.filters.employeeType}</li>}
+                </ul>
+                <EmployeeTable employees={this.state.employees}/>
+            </div>
+        } else if (this.state.route === "create") {
             return <EmployeeForm onSubmit={this.createEmployee}/>;
-        } else if(this.state.route === "search"){
-            return <EmployeeSearch onSubmit={this.applySearch}/>;
+        } else if (this.state.route === "search") {
+            return <EmployeeSearch onSubmit={this.applySearch} filters={this.state.filters}/>;
         }
     }
 
@@ -400,11 +493,14 @@ class EmployeeDirectory extends React.Component {
     }
 
     applySearch(search) {
-        this.setState(
-            {
-                employeeTypeFilter: search.employeeType,
-                }
+        this.setState({
+                loading: true,
+                filters: search
+            }
         )
+        setTimeout(() => {
+            this.componentDidMount();
+        }, 1000);
     }
 
     createEmployee(employee) {
